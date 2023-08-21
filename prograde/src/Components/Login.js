@@ -3,37 +3,34 @@ import { Card, Button, Form, Alert } from 'react-bootstrap';
 import { useAuth } from '../Contexts/AuthProvider';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Signup = () => {
+const Login = () => {
+  // Create refs for input fields
   const emailRef = useRef();
   const passwordRef = useRef();
-  const passwordConfirmRef = useRef();
-  const { signup } = useAuth();
+  const passwordConfirmRef = useRef(); // Add a ref for password confirmation
+  const { login } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  // Get the navigate function from React Router
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Initialize navigate hook
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError('Passwords do not match');
-    }
-
-    if (passwordRef.current.value.length < 6) {
-      return setError('Password should be at least 6 characters');
-    }
-
     setError('');
     setLoading(true);
 
+    // Check if passwords match
+    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+      setError('Passwords do not match');
+      setLoading(false);
+      return;
+    }
+
     try {
-      await signup(emailRef.current.value, passwordRef.current.value);
-      // Use navigate to go to a new route after successful signup
-      navigate('/dashboard'); // Change '/dashboard' to your desired route
+      await login(emailRef.current.value, passwordRef.current.value);
+      navigate('/dashboard'); // Use navigate to change the route
     } catch {
-      setError('Failed to create an account');
+      setError('Failed to log in');
     }
 
     setLoading(false);
@@ -43,8 +40,8 @@ const Signup = () => {
     <>
       <Card>
         <Card.Body>
-          <h2 className="text-center mb-4">Sign Up for Prograde</h2>
-
+          <h2 className="text-center mb-4">Log In to Prograde</h2>
+        
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group id="email">
@@ -54,25 +51,22 @@ const Signup = () => {
             <Form.Group id="password">
               <Form.Label>Password:</Form.Label>
               <Form.Control type="password" ref={passwordRef} required />
-              <small className="text-muted">
-                Password should be at least 6 characters long.
-              </small>
             </Form.Group>
             <Form.Group id="password-confirm">
-              <Form.Label>Confirm Password:</Form.Label>
+              <Form.Label>Password Confirmation:</Form.Label>
               <Form.Control type="password" ref={passwordConfirmRef} required />
             </Form.Group>
             <Button disabled={loading} className="w-100" type="submit">
-              Sign Up
+              Log In
             </Button>
           </Form>
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">
-        Already have a Prograde account? <Link to="/login">Log In</Link>
+        Need a Prograde Account? <Link to="/signup">Sign Up</Link>
       </div>
     </>
   );
 };
 
-export default Signup;
+export default Login;

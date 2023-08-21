@@ -5,6 +5,7 @@ import { Container } from "react-bootstrap";
 import AuthProvider from "../src/Contexts/AuthProvider";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./Components/Dashboard";
+import Login from "./Components/Login";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
             </Routes>
           </Router>
         </AuthProvider>
