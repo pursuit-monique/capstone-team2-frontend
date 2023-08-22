@@ -3,15 +3,22 @@ import { Card, Button, Form, Alert } from 'react-bootstrap';
 import { useAuth } from '../Contexts/AuthProvider';
 import { Link, useNavigate } from 'react-router-dom';
 
+function isStrongPassword(password) {
+  // Minimum 6 characters, at least one uppercase letter, one lowercase letter, one number, and one special character
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+  return passwordRegex.test(password);
+}
+
 const Login = () => {
-  // Create refs for input fields
   const emailRef = useRef();
   const passwordRef = useRef();
-  const passwordConfirmRef = useRef(); // Add a ref for password confirmation
+  const passwordConfirmRef = useRef();
   const { login } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Initialize navigate hook
+
+  // Get the navigate function from React Router
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -27,8 +34,16 @@ const Login = () => {
     }
 
     try {
+      // Validate the password strength before attempting to log in
+      if (!isStrongPassword(passwordRef.current.value)) {
+        setError('Password is too weak. It should meet strength requirements.');
+        setLoading(false);
+        return;
+      }
+
       await login(emailRef.current.value, passwordRef.current.value);
-      navigate('/dashboard'); // Use navigate to change the route
+      // Use navigate to change the route on successful login
+      navigate('/dashboard'); // Change to your desired route
     } catch {
       setError('Failed to log in');
     }
@@ -41,7 +56,7 @@ const Login = () => {
       <Card>
         <Card.Body>
           <h2 className="text-center mb-4">Log In to Prograde</h2>
-        
+
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group id="email">

@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { auth } from "../firebase";
+import { Link } from 'react-router-dom';
 
 const AuthContext = React.createContext();
 
@@ -19,24 +20,28 @@ const AuthProvider = ({ children }) => {
     return auth.signInWithEmailAndPassword(email, password);
   }
 
+  function logout() {
+    return auth.signOut()
+  }
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setLoading(false);
       setCurrentUser(user);
     });
 
-    return () => unsubscribe(); // Cleanup the subscription when unmounted
+    return unsubscribe; // Cleanup the subscription when unmounted
   }, []);
 
   const value = {
-    signup,
-    login,
     currentUser,
+    login,
+    signup,
+    logout,
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {" "}
       {/* Provide the 'value' to the context */}
       {!loading && children}
     </AuthContext.Provider>

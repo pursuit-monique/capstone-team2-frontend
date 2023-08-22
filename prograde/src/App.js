@@ -8,6 +8,10 @@ import Dashboard from "./Components/Dashboard";
 import Login from "./Components/Login";
 
 const App = () => {
+  // Assuming you have currentUser set up in your AuthProvider
+  // Replace with your actual currentUser data fetched from AuthProvider
+  const currentUser = null;
+
   return (
     <Container
       className="d-flex align-items-center justify-content-center"
@@ -17,8 +21,16 @@ const App = () => {
         <AuthProvider>
           <Router>
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              {/* Route for the root URL */}
+              {/* <Route path="/" element={<LandingPage />} /> */}
+
+              {/* Route for the dashboard */}
+              <Route path="/dashboard" element={<Dashboard />} />
+
+              {/* Route for signup */}
               <Route path="/signup" element={<Signup />} />
+
+              {/* Route for login */}
               <Route path="/login" element={<Login />} />
             </Routes>
           </Router>
