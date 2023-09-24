@@ -114,6 +114,7 @@ const Map = () => {
     setDuration("");
     originRef.current.value = "";
     destinationRef.current.value = "";
+    centerToUserLocation();
   }
 
   function centerToUserLocation() {
